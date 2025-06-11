@@ -1,17 +1,9 @@
-let allHolyPlaces = [];
-
-document.addEventListener('DOMContentLoaded', async function() {
-    // Зареждане на данните
-    if (!holyplacesData) {
-        await loadHolyPlacesData();
-    }
-    allHolyPlaces = holyplacesData;
-    
+document.addEventListener('DOMContentLoaded', function() {
     // Попълване на филтрите
     populateFilters();
     
     // Показване на всички места
-    displayHolyPlaces(allHolyPlaces);
+    displayHolyPlaces(holyplacesData);
     
     // Добавяне на event listeners
     const typeFilter = document.getElementById('type-filter');
@@ -27,13 +19,13 @@ document.addEventListener('DOMContentLoaded', async function() {
         typeFilter.value = '';
         denominationFilter.value = '';
         cityFilter.value = '';
-        displayHolyPlaces(allHolyPlaces);
+        displayHolyPlaces(holyplacesData);
     });
 });
 
 function populateFilters() {
     // Попълване на типове
-    const types = getUniqueValues(allHolyPlaces, 'type');
+    const types = getUniqueValues(holyplacesData, 'type');
     const typeSelect = document.getElementById('type-filter');
     types.forEach(type => {
         const option = document.createElement('option');
@@ -43,7 +35,7 @@ function populateFilters() {
     });
     
     // Попълване на деноминации
-    const denominations = getUniqueValues(allHolyPlaces, 'denomination');
+    const denominations = getUniqueValues(holyplacesData, 'denomination');
     const denominationSelect = document.getElementById('denomination-filter');
     denominations.forEach(denomination => {
         const option = document.createElement('option');
@@ -53,7 +45,7 @@ function populateFilters() {
     });
     
     // Попълване на градове
-    const cities = getUniqueValues(allHolyPlaces, 'city');
+    const cities = getUniqueValues(holyplacesData, 'city');
     const citySelect = document.getElementById('city-filter');
     cities.forEach(city => {
         const option = document.createElement('option');
@@ -68,7 +60,7 @@ function filterHolyPlaces() {
     const denominationValue = document.getElementById('denomination-filter').value;
     const cityValue = document.getElementById('city-filter').value;
     
-    const filtered = allHolyPlaces.filter(place => {
+    const filtered = holyplacesData.filter(place => {
         const matchType = !typeValue || place.type === typeValue;
         const matchDenomination = !denominationValue || place.denomination === denominationValue;
         const matchCity = !cityValue || place.city === cityValue;

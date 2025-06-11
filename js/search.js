@@ -4,17 +4,12 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!searchInput) return;
     
-    searchInput.addEventListener('input', async function() {
+    searchInput.addEventListener('input', function() {
         const query = this.value.toLowerCase().trim();
         
         if (query.length < 2) {
             searchResults.classList.remove('active');
             return;
-        }
-        
-        // Уверяваме се, че данните са заредени
-        if (!holyplacesData) {
-            await loadHolyPlacesData();
         }
         
         const filtered = holyplacesData.filter(place => {

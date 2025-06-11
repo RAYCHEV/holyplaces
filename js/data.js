@@ -1,4 +1,4 @@
-{
+const holyplacesDatabase = {
   "holyplaces": [
     {
       "id": "alexander-nevsky",
@@ -76,4 +76,4 @@
       "image": "images/banya-bashi.jpg"
     }
   ]
-}
+};

@@ -1,18 +1,5 @@
-// Глобална променлива за съхранение на данните
-let holyplacesData = null;
-
-// Функция за зареждане на данните
-async function loadHolyPlacesData() {
-    try {
-        const response = await fetch('data/holyplaces.json');
-        const data = await response.json();
-        holyplacesData = data.holyplaces;
-        return holyplacesData;
-    } catch (error) {
-        console.error('Грешка при зареждане на данните:', error);
-        return [];
-    }
-}
+// Директно използваме данните от data.js
+const holyplacesData = holyplacesDatabase.holyplaces;
 
 // Функция за извличане на уникални стойности
 function getUniqueValues(array, key) {
@@ -25,9 +12,7 @@ function capitalize(str) {
 }
 
 // Инициализация при зареждане на страницата
-document.addEventListener('DOMContentLoaded', async function() {
-    await loadHolyPlacesData();
-    
+document.addEventListener('DOMContentLoaded', function() {
     // Обновяване на статистиките на началната страница
     if (document.getElementById('total-places')) {
         updateHomeStats();
@@ -36,8 +21,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 
 // Функция за обновяване на статистиките
 function updateHomeStats() {
-    if (!holyplacesData) return;
-    
     document.getElementById('total-places').textContent = holyplacesData.length;
     document.getElementById('total-cities').textContent = getUniqueValues(holyplacesData, 'city').length;
     document.getElementById('total-types').textContent = getUniqueValues(holyplacesData, 'type').length;
