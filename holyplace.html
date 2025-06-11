@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="page-title">Детайли - Свети места в България</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Свети места в България</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Начало</a></li>
+                <li><a href="holyplaces.html">Всички храмове</a></li>
+                <li><a href="about.html">За сайта</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container holyplace-detail">
+        <div id="loading">Зареждане...</div>
+        <div id="content" style="display: none;">
+            <h1 id="place-name"></h1>
+            
+            <div class="holyplace-info">
+                <div class="info-section">
+                    <h2>Информация</h2>
+                    <p class="description" id="place-description"></p>
+                    
+                    <ul class="details-list">
+                        <li><strong>Тип:</strong> <span id="place-type"></span></li>
+                        <li><strong>Деноминация:</strong> <span id="place-denomination"></span></li>
+                        <li><strong>Адрес:</strong> <span id="place-address"></span></li>
+                        <li><strong>Работно време:</strong> <span id="place-hours"></span></li>
+                        <li id="phone-row" style="display: none;"><strong>Телефон:</strong> <a id="place-phone" href=""></a></li>
+                        <li id="website-row" style="display: none;"><strong>Уебсайт:</strong> <a id="place-website" href="" target="_blank" rel="noopener"></a></li>
+                    </ul>
+                    
+                    <div class="action-buttons">
+                        <button onclick="" id="navigation-btn" class="btn-primary">
+                            📍 Навигация
+                        </button>
+                        <a href="" id="website-btn" target="_blank" class="btn-secondary" style="display: none;">
+                            🌐 Официален сайт
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="map-section">
+                    <h2>Местоположение</h2>
+                    <div id="map" class="map-container"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Свети места в България. Всички права запазени.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/holyplace-detail.js"></script>
+</body>
+</html>

@@ -1,46 +1,71 @@
----
-layout: default
-title: Начало
----
-
-<div class="hero">
-    <div class="container">
-        <h1>Добре дошли в {{ site.title }}</h1>
-        <p>Открийте информация за храмове, манастири, църкви и параклиси в България</p>
-        
-        <div class="search-container">
-            <input type="text" id="home-search" placeholder="Търсене по име, град или тип..." class="search-input">
-            <div id="search-results" class="search-results"></div>
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свети места в България</title>
+    <meta name="description" content="Информация за храмове, църкви, параклиси и манастири">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Свети места в България</a>
+            <ul class="nav-links">
+                <li><a href="index.html" class="active">Начало</a></li>
+                <li><a href="holyplaces.html">Всички храмове</a></li>
+                <li><a href="about.html">За сайта</a></li>
+            </ul>
         </div>
-    </div>
-</div>
+    </nav>
 
-<section class="info-section">
-    <div class="container">
-        <h2>За проекта</h2>
-        <p>Този сайт предоставя подробна информация за светите места в България. Тук можете да намерите:</p>
-        <ul>
-            <li>Точно местоположение и навигация</li>
-            <li>Работно време и контакти</li>
-            <li>Официални уебсайтове</li>
-            <li>История и описание</li>
-        </ul>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <h3>{{ site.data.holyplaces | size }}</h3>
-                <p>Свети места в базата данни</p>
-            </div>
-            <div class="stat-item">
-                <h3>{{ site.data.holyplaces | map: "city" | uniq | size }}</h3>
-                <p>Града</p>
-            </div>
-            <div class="stat-item">
-                <h3>{{ site.data.holyplaces | map: "type" | uniq | size }}</h3>
-                <p>Типа обекти</p>
+    <div class="hero">
+        <div class="container">
+            <h1>Добре дошли в Свети места в България</h1>
+            <p>Открийте информация за храмове, манастири, църкви и параклиси в България</p>
+            
+            <div class="search-container">
+                <input type="text" id="home-search" placeholder="Търсене по име, град или тип..." class="search-input">
+                <div id="search-results" class="search-results"></div>
             </div>
         </div>
     </div>
-</section>
 
-<script src="{{ '/assets/js/search.js' | relative_url }}"></script>
+    <section class="info-section">
+        <div class="container">
+            <h2>За проекта</h2>
+            <p>Този сайт предоставя подробна информация за светите места в България. Тук можете да намерите:</p>
+            <ul>
+                <li>Точно местоположение и навигация</li>
+                <li>Работно време и контакти</li>
+                <li>Официални уебсайтове</li>
+                <li>История и описание</li>
+            </ul>
+            
+            <div class="stats">
+                <div class="stat-item">
+                    <h3 id="total-places">0</h3>
+                    <p>Свети места в базата данни</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="total-cities">0</h3>
+                    <p>Града</p>
+                </div>
+                <div class="stat-item">
+                    <h3 id="total-types">0</h3>
+                    <p>Типа обекти</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Свети места в България. Всички права запазени.</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/search.js"></script>
+</body>
+</html>
