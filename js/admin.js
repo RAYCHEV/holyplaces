@@ -40,6 +40,7 @@ function renderTable() {
             <td>${place.denomination}</td>
             <td>${place.city}</td>
             <td>${place.latitude.toFixed(4)}, ${place.longitude.toFixed(4)}</td>
+            <td>${place.image || 'Няма снимка'}</td>
             <td>
                 <div class="action-buttons">
                     <button class="btn-edit btn-small" data-index="${index}">✏️ Редактирай</button>
@@ -58,6 +59,7 @@ function showAddModal() {
     document.getElementById('placeForm').reset();
     document.getElementById('editIndex').value = '-1';
     document.getElementById('placeId').disabled = false;
+    document.getElementById('placeImagePath').value = '';
     document.getElementById('editModal').style.display = 'block';
 }
 
@@ -83,8 +85,27 @@ function editPlace(index) {
     document.getElementById('placeWorkingHours').value = place.workingHours || '';
     document.getElementById('placePhone').value = place.phone || '';
     document.getElementById('placeWebsite').value = place.website || '';
+    document.getElementById('placeImagePath').value = place.image || '';
     
     document.getElementById('editModal').style.display = 'block';
+}
+
+// Обработка на избор на изображение
+function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (file) {
+        // Взимаме само името на файла
+        const fileName = file.name;
+        // Добавяме префикс img/
+        const imagePath = 'img/' + fileName;
+        document.getElementById('placeImagePath').value = imagePath;
+    }
+}
+
+// Изчистване на изображението
+function clearImage() {
+    document.getElementById('placeImage').value = '';
+    document.getElementById('placeImagePath').value = '';
 }
 
 // Запазване на място
@@ -104,7 +125,7 @@ function savePlace() {
         workingHours: document.getElementById('placeWorkingHours').value || '',
         phone: document.getElementById('placePhone').value || '',
         website: document.getElementById('placeWebsite').value || '',
-        image: ""
+        image: document.getElementById('placeImagePath').value || ''
     };
     
     if (index === -1) {
@@ -139,6 +160,7 @@ function deletePlace(index) {
 function closeModal() {
     document.getElementById('editModal').style.display = 'none';
     document.getElementById('placeForm').reset();
+    document.getElementById('placeImagePath').value = '';
 }
 
 // Показване на карта за избор на координати
@@ -280,3 +302,5 @@ window.closeMapModal = closeMapModal;
 window.applyCoordinates = applyCoordinates;
 window.searchLocation = searchLocation;
 window.generateAndDownloadDataJS = generateAndDownloadDataJS;
+window.handleImageSelect = handleImageSelect;
+window.clearImage = clearImage;

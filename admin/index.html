@@ -260,6 +260,7 @@
                         <th>Деноминация</th>
                         <th>Град</th>
                         <th>Координати</th>
+                        <th>Изображение</th>
                         <th>Действия</th>
                     </tr>
                 </thead>
@@ -365,6 +366,23 @@
                         <input type="url" id="placeWebsite">
                     </div>
                 </div>
+
+                            <div class="form-group">
+                <label for="placeImage">Изображение</label>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="placeImagePath" readonly placeholder="img/image-name.jpg" style="flex: 1;">
+                    <input type="file" id="placeImage" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+                    <button type="button" class="btn-small btn-coords" onclick="document.getElementById('placeImage').click()">
+                        📷 Избери снимка
+                    </button>
+                    <button type="button" class="btn-small btn-secondary" onclick="clearImage()">
+                        ❌ Изчисти
+                    </button>
+                </div>
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    Забележка: Снимката трябва да бъде качена в папка "img/" на сайта. Тук само избирате името на файла.
+                </small>
+            </div>
 
                 <div class="action-buttons" style="margin-top: 2rem;">
                     <button type="submit" class="btn-save btn-primary">💾 Запази</button>
