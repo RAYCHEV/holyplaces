@@ -1,0 +1,12 @@
+title: Свети места в България
+description: Информация за храмове, църкви, параклиси и манастири
+baseurl: ""
+url: ""
+
+collections:
+  holyplaces:
+    output: true
+    permalink: /holyplaces/:name/
+
+plugins:
+  - jekyll-seo-tag

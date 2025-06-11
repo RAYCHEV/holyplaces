@@ -1,0 +1,66 @@
+---
+layout: default
+title: Всички храмове
+---
+
+<div class="container">
+    <h1>Всички свети места</h1>
+    
+    <div class="filters">
+        <h3>Филтри</h3>
+        <div class="filter-group">
+            <label>Тип:</label>
+            <select id="type-filter">
+                <option value="">Всички</option>
+                {% assign types = site.data.holyplaces | map: "type" | uniq %}
+                {% for type in types %}
+                <option value="{{ type }}">{{ type | capitalize }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label>Деноминация:</label>
+            <select id="denomination-filter">
+                <option value="">Всички</option>
+                {% assign denominations = site.data.holyplaces | map: "denomination" | uniq %}
+                {% for denomination in denominations %}
+                <option value="{{ denomination }}">{{ denomination | capitalize }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <div class="filter-group">
+            <label>Град:</label>
+            <select id="city-filter">
+                <option value="">Всички</option>
+                {% assign cities = site.data.holyplaces | map: "city" | uniq | sort %}
+                {% for city in cities %}
+                <option value="{{ city }}">{{ city }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        
+        <button id="reset-filters" class="btn-secondary">Изчисти филтри</button>
+    </div>
+    
+    <div id="holyplaces-list" class="holyplaces-grid">
+        {% for place in site.data.holyplaces %}
+        <div class="holyplace-card" 
+             data-type="{{ place.type }}" 
+             data-denomination="{{ place.denomination }}"
+             data-city="{{ place.city }}">
+            <h3><a href="{{ '/holyplace/' | append: place.id | relative_url }}">{{ place.name }}</a></h3>
+            <p class="holyplace-meta">
+                <span class="badge">{{ place.type }}</span>
+                <span class="badge">{{ place.denomination }}</span>
+                <span class="location">📍 {{ place.city }}</span>
+            </p>
+            <p>{{ place.description | truncate: 150 }}</p>
+            <a href="{{ '/holyplace/' | append: place.id | relative_url }}" class="btn-primary">Виж повече</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{{ '/assets/js/filters.js' | relative_url }}"></script>

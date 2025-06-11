@@ -1,0 +1,46 @@
+---
+layout: default
+title: Начало
+---
+
+<div class="hero">
+    <div class="container">
+        <h1>Добре дошли в {{ site.title }}</h1>
+        <p>Открийте информация за храмове, манастири, църкви и параклиси в България</p>
+        
+        <div class="search-container">
+            <input type="text" id="home-search" placeholder="Търсене по име, град или тип..." class="search-input">
+            <div id="search-results" class="search-results"></div>
+        </div>
+    </div>
+</div>
+
+<section class="info-section">
+    <div class="container">
+        <h2>За проекта</h2>
+        <p>Този сайт предоставя подробна информация за светите места в България. Тук можете да намерите:</p>
+        <ul>
+            <li>Точно местоположение и навигация</li>
+            <li>Работно време и контакти</li>
+            <li>Официални уебсайтове</li>
+            <li>История и описание</li>
+        </ul>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <h3>{{ site.data.holyplaces | size }}</h3>
+                <p>Свети места в базата данни</p>
+            </div>
+            <div class="stat-item">
+                <h3>{{ site.data.holyplaces | map: "city" | uniq | size }}</h3>
+                <p>Града</p>
+            </div>
+            <div class="stat-item">
+                <h3>{{ site.data.holyplaces | map: "type" | uniq | size }}</h3>
+                <p>Типа обекти</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script src="{{ '/assets/js/search.js' | relative_url }}"></script>
