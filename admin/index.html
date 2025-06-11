@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Администрация - Свети места в България</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        /* Допълнителни стилове за админ панела */
+        .admin-container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .data-table {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            background: var(--primary-color);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .data-table td {
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .data-table tr:hover {
+            background: #f9f9f9;
+        }
+
+        .data-table input,
+        .data-table select,
+        .data-table textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .data-table textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.3s;
+        }
+
+        .btn-edit {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #45a049;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #da190b;
+        }
+
+        .btn-coords {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-coords:hover {
+            background: #0b7dda;
+        }
+
+        .btn-save {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-cancel {
+            background: #9e9e9e;
+            color: white;
+        }
+
+        /* Модален прозорец */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .close {
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close:hover {
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        #mapModal {
+            height: 400px;
+            margin: 1rem 0;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .coordinates-info {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+            font-family: monospace;
+        }
+
+        .search-box {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-table {
+                overflow-x: auto;
+            }
+            
+            .data-table table {
+                min-width: 800px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <a href="../index.html" class="logo">Свети места в България - Админ</a>
+            <ul class="nav-links">
+                <li><a href="../index.html">Начало</a></li>
+                <li><a href="../holyplaces.html">Всички храмове</a></li>
+                <li><a href="index.html" class="active">Администрация</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>Управление на свети места</h1>
+            <div class="admin-actions">
+                <button class="btn-primary" onclick="showAddModal()">➕ Добави ново място</button>
+                <button class="btn-secondary" onclick="generateAndDownloadDataJS()">💾 Изтегли data.js</button>
+            </div>
+        </div>
+
+        <div class="data-table">
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Име</th>
+                        <th>Тип</th>
+                        <th>Деноминация</th>
+                        <th>Град</th>
+                        <th>Координати</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Тук ще се генерират редовете -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Модал за добавяне/редактиране -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Добави ново място</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form id="placeForm">
+                <input type="hidden" id="editIndex" value="-1">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="placeId">ID (уникален идентификатор)*</label>
+                        <input type="text" id="placeId" required pattern="[a-z0-9-]+" 
+                               title="Само малки букви, числа и тирета">
+                    </div>
+                    <div class="form-group">
+                        <label for="placeName">Име*</label>
+                        <input type="text" id="placeName" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="placeType">Тип*</label>
+                        <select id="placeType" required>
+                            <option value="">Избери тип</option>
+                            <option value="църква">Църква</option>
+                            <option value="катедрала">Катедрала</option>
+                            <option value="манастир">Манастир</option>
+                            <option value="параклис">Параклис</option>
+                            <option value="джамия">Джамия</option>
+                            <option value="синагога">Синагога</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="placeDenomination">Деноминация*</label>
+                        <select id="placeDenomination" required>
+                            <option value="">Избери деноминация</option>
+                            <option value="православна">Православна</option>
+                            <option value="католическа">Католическа</option>
+                            <option value="протестантска">Протестантска</option>
+                            <option value="мюсюлманска">Мюсюлманска</option>
+                            <option value="еврейска">Еврейска</option>
+                            <option value="друга">Друга</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="placeCity">Град*</label>
+                        <input type="text" id="placeCity" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="placeWorkingHours">Работно време</label>
+                        <input type="text" id="placeWorkingHours" placeholder="напр. 08:00 - 18:00">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="placeAddress">Адрес*</label>
+                    <input type="text" id="placeAddress" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="placeDescription">Описание*</label>
+                    <textarea id="placeDescription" rows="3" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="placeLatitude">Географска ширина*</label>
+                        <input type="number" id="placeLatitude" step="any" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="placeLongitude">Географска дължина*</label>
+                        <input type="number" id="placeLongitude" step="any" required>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-coords btn-small" onclick="showMapModal()">
+                    📍 Избери координати от карта
+                </button>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="placePhone">Телефон</label>
+                        <input type="tel" id="placePhone">
+                    </div>
+                    <div class="form-group">
+                        <label for="placeWebsite">Уебсайт</label>
+                        <input type="url" id="placeWebsite">
+                    </div>
+                </div>
+
+                <div class="action-buttons" style="margin-top: 2rem;">
+                    <button type="submit" class="btn-save btn-primary">💾 Запази</button>
+                    <button type="button" class="btn-cancel btn-secondary" onclick="closeModal()">❌ Отказ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Модал за карта -->
+    <div id="mapPickerModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Избери местоположение на картата</h2>
+                <span class="close" onclick="closeMapModal()">&times;</span>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="mapSearch" placeholder="Търси адрес или място..." onkeypress="searchLocation(event)">
+            </div>
+
+            <div id="mapModal"></div>
+            
+            <div class="coordinates-info">
+                <strong>Избрани координати:</strong> 
+                <span id="selectedCoords">Кликнете на картата за да изберете местоположение</span>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="applyCoordinates()">✅ Приложи координати</button>
+                <button class="btn-secondary" onclick="closeMapModal()">❌ Отказ</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Свети места в България. Всички права запазени.</p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="../js/data.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
