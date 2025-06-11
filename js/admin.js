@@ -14,6 +14,17 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         savePlace();
     });
+    
+    // Event delegation за бутоните в таблицата
+    document.getElementById('tableBody').addEventListener('click', function(e) {
+        if (e.target.classList.contains('btn-edit')) {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            editPlace(index);
+        } else if (e.target.classList.contains('btn-delete')) {
+            const index = parseInt(e.target.getAttribute('data-index'));
+            deletePlace(index);
+        }
+    });
 });
 
 // Рендериране на таблицата
@@ -31,8 +42,8 @@ function renderTable() {
             <td>${place.latitude.toFixed(4)}, ${place.longitude.toFixed(4)}</td>
             <td>
                 <div class="action-buttons">
-                    <button class="btn-edit btn-small" onclick="editPlace(${index})">✏️ Редактирай</button>
-                    <button class="btn-delete btn-small" onclick="deletePlace(${index})">🗑️ Изтрий</button>
+                    <button class="btn-edit btn-small" data-index="${index}">✏️ Редактирай</button>
+                    <button class="btn-delete btn-small" data-index="${index}">🗑️ Изтрий</button>
                 </div>
             </td>
         `;
@@ -69,7 +80,7 @@ function editPlace(index) {
     document.getElementById('placeDescription').value = place.description;
     document.getElementById('placeLatitude').value = place.latitude;
     document.getElementById('placeLongitude').value = place.longitude;
-    document.getElementById('placeWorkingHours').value = place.workingHours;
+    document.getElementById('placeWorkingHours').value = place.workingHours || '';
     document.getElementById('placePhone').value = place.phone || '';
     document.getElementById('placeWebsite').value = place.website || '';
     
@@ -90,9 +101,9 @@ function savePlace() {
         description: document.getElementById('placeDescription').value,
         latitude: parseFloat(document.getElementById('placeLatitude').value),
         longitude: parseFloat(document.getElementById('placeLongitude').value),
-        workingHours: document.getElementById('placeWorkingHours').value,
-        phone: document.getElementById('placePhone').value,
-        website: document.getElementById('placeWebsite').value,
+        workingHours: document.getElementById('placeWorkingHours').value || '',
+        phone: document.getElementById('placePhone').value || '',
+        website: document.getElementById('placeWebsite').value || '',
         image: ""
     };
     
@@ -116,7 +127,8 @@ function savePlace() {
 
 // Изтриване на място
 function deletePlace(index) {
-    if (confirm(`Сигурни ли сте, че искате да изтриете "${editableData[index].name}"?`)) {
+    const place = editableData[index];
+    if (confirm(`Сигурни ли сте, че искате да изтриете "${place.name}"?`)) {
         editableData.splice(index, 1);
         renderTable();
         alert('Мястото е изтрито! Не забравяйте да изтеглите новия data.js файл.');
@@ -149,6 +161,8 @@ function showMapModal() {
             if (document.getElementById('placeLatitude').value) {
                 selectedMarker = L.marker([lat, lng]).addTo(mapPicker);
                 tempCoords = { lat, lng };
+                document.getElementById('selectedCoords').textContent = 
+                    `${lat.toFixed(6)}, ${lng.toFixed(6)}`;
             }
             
             // Клик върху картата
@@ -257,3 +271,12 @@ window.onclick = function(event) {
         event.target.style.display = 'none';
     }
 }
+
+// Глобални функции за достъп от HTML
+window.showAddModal = showAddModal;
+window.closeModal = closeModal;
+window.showMapModal = showMapModal;
+window.closeMapModal = closeMapModal;
+window.applyCoordinates = applyCoordinates;
+window.searchLocation = searchLocation;
+window.generateAndDownloadDataJS = generateAndDownloadDataJS;
